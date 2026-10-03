@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2c1119">
+<title>С Днём учителя!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:radial-gradient(120% 80% at 50% 0%, #5a2233 0%, #2c1119 52%, #150810 100%);
+    color:#f7e9d8;
+    font-family:'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    overflow:hidden;
+    height:100dvh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- ФОН: листья ---------- */
+  #leaves{
+    position:fixed;inset:0;width:100%;height:100%;
+    pointer-events:none;z-index:0;
+  }
+  .vignette{
+    position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:radial-gradient(90% 60% at 50% 40%, transparent 40%, rgba(10,4,7,.55) 100%);
+  }
+
+  /* ---------- ЭКРАНЫ ---------- */
+  .screen{
+    position:fixed;inset:0;z-index:5;
+    transition:opacity .7s ease, visibility .7s ease;
+  }
+  .screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+
+  /* ---------- КОНВЕРТ ---------- */
+  #screen-envelope{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .env-scene{display:flex;flex-direction:column;align-items:center;}
+
+  .envelope{
+    position:relative;
+    width:min(84vw, 330px);
+    aspect-ratio:1.55 / 1;
+    border-radius:8px;
+    background:linear-gradient(160deg,#f9eed9 0%,#ecd8b3 100%);
+    box-shadow:0 26px 60px -18px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.12) inset;
+    cursor:pointer;
+    user-select:none;
+    animation:floatEnv 4.5s ease-in-out infinite;
+    transition:transform .3s ease;
+  }
+  .envelope:active{transform:scale(.97);}
+  @keyframes floatEnv{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-9px);}
+  }
+  .envelope.open{animation:none;}
+
+  /* письмо */
+  .env-letter{
+    position:absolute;left:7%;right:7%;bottom:5%;height:46%;
+    background:linear-gradient(180deg,#fffdf8,#f7ecd8);
+    border-radius:4px;
+    z-index:1;
+    box-shadow:0 -6px 16px rgba(0,0,0,.18);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform 1s cubic-bezier(.18,.85,.3,1) .35s;
+  }
+  .env-letter span{
+    font-family:'Playfair Display', Georgia, serif;
+    font-style:italic;
+    color:#8a4a2a;
+    font-size:clamp(13px,3.6vw,16px);
+    letter-spacing:.4px;
+  }
+  .envelope.open .env-letter{transform:translateY(-92%);}
+
+  /* передний карман */
+  .env-front{
+    position:absolute;inset:0;z-index:2;
+    border-radius:8px;
+    background:linear-gradient(170deg,#f5e6ca 0%,#e3c99c 100%);
+    clip-path:polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+    box-shadow:inset 0 -2px 10px rgba(0,0,0,.08);
+  }
+
+  /* клапан */
+  .env-flap{
+    position:absolute;top:0;left:0;right:0;height:52%;
+    background:linear-gradient(180deg,#f0dfc0 0%,#dfc396 100%);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    transform-origin:top center;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    transition:transform .6s cubic-bezier(.4,0,.2,1);
+    z-index:3;
+  }
+  .envelope.open .env-flap{transform:rotateX(180deg);}
+
+  /* сургучная печать */
+  .env-seal{
+    position:absolute;left:50%;bottom:-14%;
+    width:46px;height:46px;margin-left:-23px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #c8474f, #8e1f2c 70%);
+    box-shadow:0 4px 12px rgba(0,0,0,.4), inset 0 -3px 8px rgba(0,0,0,.35), inset 0 3px 6px rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display', Georgia, serif;
+    font-weight:700;font-size:20px;color:#f3d9a8;
+    text-shadow:0 1px 2px rgba(0,0,0,.4);
+    transition:opacity .3s ease;
+  }
+  .envelope.open .env-seal{opacity:0;}
+
+  .hint{
+    margin-top:34px;
+    font-size:14px;letter-spacing:2.4px;text-transform:uppercase;
+    color:rgba(247,233,216,.6);
+    animation:pulseHint 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseHint{
+    0%,100%{opacity:.45;}
+    50%{opacity:1;}
+  }
+
+  /* ---------- ОТКРЫТКА ---------- */
+  #screen-card{
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:0;
+    display:block;
+  }
+  .card{
+    max-width:580px;
+    margin:0 auto;
+    padding:calc(44px + env(safe-area-inset-top)) 22px calc(56px + env(safe-area-inset-bottom));
+    text-align:center;
+    opacity:0;
+    transform:translateY(24px);
+  }
+  #screen-card:not(.hidden) .card{
+    animation:cardIn .9s cubic-bezier(.2,.8,.3,1) .25s forwards;
+  }
+  @keyframes cardIn{
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .badge{
+    display:inline-block;
+    padding:7px 16px;
+    border-radius:999px;
+    font-size:11.5px;
+    letter-spacing:2.2px;
+    text-transform:uppercase;
+    font-weight:600;
+    color:#e8b96a;
+    border:1px solid rgba(232,185,106,.4);
+    background:rgba(232,185,106,.07);
+    margin-bottom:26px;
+  }
+
+  h1{
+    font-family:'Playfair Display', Georgia, serif;
+    font-weight:700;
+    font-size:clamp(38px, 12vw, 60px);
+    line-height:1.03;
+    margin:0 0 6px;
+    letter-spacing:-.5px;
+    background:linear-gradient(180deg,#fff6e6 0%,#e8b96a 70%,#c98f3c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 44px rgba(232,185,106,.28);
+  }
+  h1 em{
+    display:block;
+    font-style:italic;
+    font-weight:600;
+  }
+
+  .ornament{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    margin:24px 0 26px;
+    color:#c98f3c;
+    font-size:11px;
+    letter-spacing:6px;
+  }
+  .ornament::before,.ornament::after{
+    content:'';height:1px;width:56px;
+    background:linear-gradient(90deg,transparent,rgba(201,143,60,.65));
+  }
+  .ornament::after{background:linear-gradient(270deg,transparent,rgba(201,143,60,.65));}
+
+  .lead{
+    font-family:'Playfair Display', Georgia, serif;
+    font-style:italic;
+    font-size:clamp(19px,5.2vw,23px);
+    color:#f2d9a9;
+    margin:0 0 20px;
+  }
+
+  .body-text{
+    font-size:clamp(15px,4.2vw,16.5px);
+    line-height:1.75;
+    color:rgba(247,233,216,.82);
+    margin:0 0 16px;
+  }
+
+  /* блок с пожеланием */
+  .wish-box{
+    margin:38px 0 14px;
+    padding:26px 18px 24px;
+    border-radius:20px;
+    background:linear-gradient(160deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+    border:1px solid rgba(232,185,106,.22);
+    box-shadow:0 18px 40px -22px rgba(0,0,0,.9);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;
+    padding:16px 22px;
+    border:none;
+    border-radius:999px;
+    font-family:inherit;
+    font-size:15.5px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#3a1410;
+    background:linear-gradient(160deg,#f5d99a,#d9a94f);
+    box-shadow:0 12px 26px -10px rgba(217,169,79,.7), inset 0 1px 0 rgba(255,255,255,.5);
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .btn:active{transform:scale(.965);filter:brightness(1.06);}
+  .btn-ghost{
+    background:transparent;
+    color:#e8b96a;
+    border:1.5px solid rgba(232,185,106,.45);
+    box-shadow:none;
+  }
+  .btn-ghost:active{background:rgba(232,185,106,.12);}
+
+  .wish{
+    margin:0;
+    font-family:'Playfair Display', Georgia, serif;
+    font-style:italic;
+    font-size:clamp(16px,4.6vw,18.5px);
+    line-height:1.62;
+    color:#f7e9d8;
+    min-height:0;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .55s ease, opacity .5s ease, margin .5s ease;
+  }
+  .wish.show{
+    max-height:340px;
+    opacity:1;
+    margin-top:20px;
+  }
+
+  .thanks{
+    margin-top:16px;
+    padding:26px 18px 24px;
+    border-radius:20px;
+    background:linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.07);
+  }
+  .counter{
+    margin:16px 0 0;
+    font-size:13.5px;
+    letter-spacing:.6px;
+    color:rgba(247,233,216,.55);
+    transition:color .3s ease;
+  }
+  .counter.bump{color:#e8b96a;}
+
+  .signature{margin-top:46px;}
+  .signature .line{
+    width:64px;height:1px;margin:0 auto 22px;
+    background:linear-gradient(90deg,transparent,rgba(201,143,60,.7),transparent);
+  }
+  .signature p{
+    font-family:'Playfair Display', Georgia, serif;
+    font-style:italic;
+    font-size:15px;
+    line-height:1.7;
+    color:rgba(247,233,216,.6);
+    margin:0;
+  }
+
+  /* всплывающие сердечки */
+  .pop{
+    position:fixed;
+    pointer-events:none;
+    font-size:26px;
+    z-index:999;
+    transform:translate(-50%,-50%);
+    animation:popUp 1.15s cubic-bezier(.2,.7,.4,1) forwards;
+    will-change:transform,opacity;
+  }
+  @keyframes popUp{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.4);}
+    18%{opacity:1;transform:translate(-50%,-75%) scale(1.15);}
+    100%{opacity:0;transform:translate(-50%,-260%) scale(1.35);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="leaves"></canvas>
+<div class="vignette"></div>
+
+<!-- ЭКРАН 1: КОНВЕРТ -->
+<div class="screen" id="screen-envelope">
+  <div class="env-scene">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Открыть открытку">
+      <div class="env-letter"><span>С Днём учителя…</span></div>
+      <div class="env-front"></div>
+      <div class="env-flap"><div class="env-seal">А</div></div>
+    </div>
+    <p class="hint">Нажмите на конверт</p>
+  </div>
+</div>
+
+<!-- ЭКРАН 2: ОТКРЫТКА -->
+<div class="screen hidden" id="screen-card">
+  <div class="card">
+    <div class="badge">Колледж АлтГУ</div>
+
+    <h1>С Днём<em>учителя!</em></h1>
+
+    <div class="ornament">✦</div>
+
+    <p class="lead">Дорогие наши преподаватели!</p>
+
+    <p class="body-text">
+      В День учителя хочется сказать вам не просто «спасибо», а от всего сердца поблагодарить за ваше терпение, мудрость и теплоту. Вы не просто даёте знания — вы учите думать, не бояться ошибок и верить в себя. С вами сложное становится понятным, а скучное — увлекательным. Спасибо за ваш труд, за бессонные ночи над нашими работами и за частичку души, которую вы вкладываете в каждого из нас.
+    </p>
+    <p class="body-text">
+      Желаем вам, чтобы работа приносила радость, а не усталость. Пусть студенты радуют успехами, благодарность будет искренней, а в жизни будет больше спокойных вечеров и приятных сюрпризов. Крепкого здоровья, вдохновения и душевного тепла. Пусть каждый ваш выпускник однажды скажет те самые важные слова, ради которых стоит быть учителем.
+    </p>
+    <p class="body-text">
+      С Днём учителя! Мы вас очень ценим и любим.
+    </p>
+
+    <div class="wish-box">
+      <button class="btn" id="wishBtn">🎁 Открыть пожелание</button>
+      <p class="wish" id="wishText"></p>
+    </div>
+
+    <div class="thanks">
+      <button class="btn btn-ghost" id="thanksBtn">💛 Сказать спасибо</button>
+      <p class="counter" id="counter">Вы уже сказали спасибо: 0 раз</p>
+    </div>
+
+    <div class="signature">
+      <div class="line"></div>
+      <p>С любовью и уважением,<br>студенты Колледжа АлтГУ, студенческое объединение ViarASU</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ ЛИСТОПАД ============ */
+  const canvas = document.getElementById('leaves');
+  const ctx = canvas.getContext('2d');
+  const COLORS = ['#e8b96a','#d98c4a','#c0563a','#b23a48','#e0a04c','#9c6b3c','#eac27a'];
+  let W = 0, H = 0, leaves = [], rafId = null;
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width  = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const target = Math.max(10, Math.min(24, Math.round(W / 22)));
+    while (leaves.length < target) leaves.push(makeLeaf(true));
+    while (leaves.length > target) leaves.pop();
+  }
+
+  function makeLeaf(initial){
+    return {
+      x: Math.random() * W,
+      y: initial ? Math.random() * H : -40,
+      size: 5 + Math.random() * 9,
+      speed: 0.25 + Math.random() * 0.75,
+      drift: (Math.random() - 0.5) * 0.55,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.03,
+      sway: Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.018,
+      color: COLORS[(Math.random() * COLORS.length) | 0],
+      alpha: 0.35 + Math.random() * 0.45
+    };
+  }
+
+  function drawLeaf(l){
+    const s = l.size;
+    ctx.save();
+    ctx.translate(l.x, l.y);
+    ctx.rotate(l.rot);
+    ctx.globalAlpha = l.alpha;
+
+    ctx.fillStyle = l.color;
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.bezierCurveTo(s * 0.95, -s * 0.45, s * 0.7, s * 0.65, 0, s);
+    ctx.bezierCurveTo(-s * 0.7, s * 0.65, -s * 0.95, -s * 0.45, 0, -s);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(0,0,0,.18)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0, -s * 0.75);
+    ctx.lineTo(0, s * 0.75);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function tick(){
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < leaves.length; i++){
+      const l = leaves[i];
+      l.sway += l.swaySpeed;
+      l.y += l.speed;
+      l.x += Math.sin(l.sway) * 0.85 + l.drift;
+      l.rot += l.rotSpeed;
+
+      if (l.y > H + 50 || l.x < -80 || l.x > W + 80){
+        leaves[i] = makeLeaf(false);
+        continue;
+      }
+      drawLeaf(l);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', function(){
+    setTimeout(resize, 250);
+  });
+  tick();
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (!rafId){
+      tick();
+    }
+  });
+
+  /* ============ ХЕЛПЕРЫ ============ */
+  function buzz(ms){
+    if (navigator.vibrate) { try { navigator.vibrate(ms); } catch(e){} }
+  }
+
+  function popEmoji(x, y, emoji){
+    const el = document.createElement('div');
+    el.className = 'pop';
+    el.textContent = emoji;
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(function(){ el.remove(); }, 1200);
+  }
+
+  /* ============ ОТКРЫТИЕ КОНВЕРТА ============ */
+  const envelope = document.getElementById('envelope');
+  const screenEnvelope = document.getElementById('screen-envelope');
+  const screenCard = document.getElementById('screen-card');
+  let opened = false;
+
+  function openCard(){
+    if (opened) return;
+    opened = true;
+    buzz(18);
+    envelope.classList.add('open');
+
+    setTimeout(function(){
+      screenEnvelope.classList.add('hidden');
+      screenCard.classList.remove('hidden');
+    }, 1150);
+
+    setTimeout(function(){
+      screenEnvelope.style.display = 'none';
+    }, 2000);
+  }
+
+  envelope.addEventListener('click', openCard);
+  envelope.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openCard(); }
+  });
+
+  /* ============ ПОЖЕЛАНИЯ ============ */
+  const wishes = [
+    'Пусть каждый ваш день начинается с улыбки, а студенты радуют успехами — даже те, от кого этого совсем не ждёшь!',
+    'Спасибо за терпение, мудрость и тепло, которые вы дарите каждый день. Это дороже любых учебников.',
+    'Пусть вдохновение никогда вас не покидает, а силы восстанавливаются так же быстро, как заканчиваются пары 😊',
+    'Ваш труд — это фундамент будущего. Спасибо, что строите его с такой любовью и ответственностью.',
+    'Пусть зарплата растёт, а стопка непроверенных тетрадей тает на глазах!',
+    'Желаем здоровья, благодарных студентов и как можно больше поводов гордиться своими выпускниками.',
+    'Пусть в вашей жизни будет больше спокойных вечеров и меньше внеплановых педсоветов.',
+    'Спасибо за то, что верите в нас даже тогда, когда мы сами в себя не верим. Это очень многое значит.',
+    'Пусть ваши лекции всегда попадают в самое сердце, а вопросы студентов — в самую точку!',
+    'Желаем вам students, которые делают домашку вовремя, и коллег, которые всегда подставят плечо.',
+    'Пусть каждый ваш выпускник однажды скажет: «Спасибо, это вы научили меня главному».',
+    'Долгих лет, крепкого здоровья и тихой радости от того, что вы делаете. Вы — лучшие!'
+  ];
+
+  const wishBtn  = document.getElementById('wishBtn');
+  const wishText = document.getElementById('wishText');
+  let lastWish = -1;
+  let wishCount = 0;
+
+  wishBtn.addEventListener('click', function(e){
+    let i;
+    do { i = Math.floor(Math.random() * wishes.length); }
+    while (wishes.length > 1 && i === lastWish);
+    lastWish = i;
+
+    wishText.classList.remove('show');
+    // принудительный reflow, чтобы анимация перезапустилась
+    void wishText.offsetWidth;
+
+    wishText.textContent = wishes[i];
+    wishText.classList.add('show');
+
+    wishBtn.textContent = wishCount === 0 ? '🎁 Ещё пожелание' : '🎁 И ещё одно!';
+    wishCount++;
+
+    buzz(12);
+
+    const r = wishBtn.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top;
+    const emojis = ['✨','🌟','💫','🎉','💛'];
+    for (let k = 0; k < 6; k++){
+      setTimeout(function(){
+        popEmoji(
+          cx + (Math.random() - 0.5) * 160,
+          cy + (Math.random() - 0.5) * 30,
+          emojis[(Math.random() * emojis.length) | 0]
+        );
+      }, k * 65);
+    }
+  });
+
+  /* ============ СПАСИБО ============ */
+  const thanksBtn = document.getElementById('thanksBtn');
+  const counter   = document.getElementById('counter');
+  let thanks = 0;
+
+  const words = ['раз', 'раза', 'раза', 'раза', 'раза', 'раз', 'раз', 'раз', 'раз', 'раз'];
+
+  function plural(n){
+    const m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return 'раз';
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return 'раза';
+    return 'раз';
+  }
+
+  thanksBtn.addEventListener('click', function(){
+    thanks++;
+    counter.textContent = 'Вы уже сказали спасибо: ' + thanks + ' ' + plural(thanks);
+    counter.classList.add('bump');
+    setTimeout(function(){ counter.classList.remove('bump'); }, 420);
+
+    buzz(10);
+
+    const r = thanksBtn.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const hearts = ['💛','❤️','🧡','💖','🌟'];
+
+    for (let k = 0; k < 5; k++){
+      setTimeout(function(){
+        popEmoji(
+          cx + (Math.random() - 0.5) * 190,
+          cy + (Math.random() - 0.5) * 40,
+          hearts[(Math.random() * hearts.length) | 0]
+        );
+      }, k * 75);
+    }
+
+    if (thanks === 10){
+      counter.textContent = '10 раз — вы нас растрогали 🥹';
+    }
+    if (thanks === 25){
+      counter.textContent = '25 раз! Да вы нас любите 💛';
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
